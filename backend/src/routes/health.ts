@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { testSupabaseConnection } from '../config/supabase';
+import { authService } from '../services/auth.service';
 import { config } from '../config/env';
 
 const router = Router();
@@ -10,6 +11,7 @@ const router = Router();
  */
 router.get('/', async (_req: Request, res: Response) => {
   const supabaseConnected = await testSupabaseConnection();
+  const authConnected = await authService.testConnection();
   
   const health = {
     status: 'ok',
@@ -18,10 +20,11 @@ router.get('/', async (_req: Request, res: Response) => {
     environment: config.nodeEnv,
     services: {
       supabase: supabaseConnected ? 'connected' : 'disconnected',
+      auth: authConnected ? 'connected' : 'disconnected',
     },
   };
 
-  const statusCode = supabaseConnected ? 200 : 503;
+  const statusCode = (supabaseConnected && authConnected) ? 200 : 503;
   
   res.status(statusCode).json({
     success: true,

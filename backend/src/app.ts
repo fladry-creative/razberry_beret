@@ -8,6 +8,7 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import healthRouter from './routes/health';
 import anthropicRouter from './routes/anthropic';
 import transcriptionRouter from './routes/transcription';
+import authRouter from './routes/auth';
 
 export function createApp(): Application {
   const app: Application = express();
@@ -38,11 +39,11 @@ export function createApp(): Application {
 
   // Routes
   app.use('/health', healthRouter);
+  app.use('/api/v1/auth', authRouter);
   app.use('/api/v1/anthropic', anthropicRouter);
   app.use('/api/v1/transcription', transcriptionRouter);
   
   // Future routes will be added here:
-  // app.use('/api/v1/auth', authRouter);
   // app.use('/api/v1/sessions', sessionsRouter);
   // app.use('/api/v1/canon', canonRouter);
 
