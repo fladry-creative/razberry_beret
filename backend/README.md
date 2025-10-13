@@ -62,6 +62,7 @@ npm start
 - `npm run lint` - Run ESLint
 - `npm run format` - Format code with Prettier
 - `npm run type-check` - Type check without emitting files
+- `npm run test:anthropic` - Test Anthropic API integration
 
 ## Project Structure
 
@@ -75,7 +76,12 @@ backend/
 │   ├── middleware/      # Express middleware
 │   │   └── errorHandler.ts
 │   ├── routes/          # API routes
-│   │   └── health.ts    # Health check endpoint
+│   │   ├── health.ts    # Health check endpoint
+│   │   └── anthropic.ts # Anthropic API routes
+│   ├── services/        # Business logic services
+│   │   └── anthropic.service.ts
+│   ├── scripts/         # Utility scripts
+│   │   └── test-anthropic.ts
 │   ├── app.ts           # Express app setup
 │   └── index.ts         # Server entry point
 ├── dist/                # Compiled JavaScript (generated)
@@ -105,6 +111,48 @@ Returns server health status and service connectivity.
     "services": {
       "supabase": "connected"
     }
+  }
+}
+```
+
+### Anthropic API
+
+**GET** `/api/v1/anthropic/test`
+
+Test Anthropic API connectivity.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "connected": true,
+    "model": {
+      "model": "claude-sonnet-4-20250514",
+      "maxTokens": 200000
+    }
+  }
+}
+```
+
+**POST** `/api/v1/anthropic/generate-question`
+
+Generate a question for the session flow.
+
+**Request Body:**
+```json
+{
+  "userResponse": "We're building an AI tool for founders",
+  "sessionContext": "Second question in session"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "question": "What specific problem are your founders facing that led you to build this?"
   }
 }
 ```
