@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import { whisperService } from '../services/whisper.service';
 import { logger } from '../config/logger';
+import { requireAuth } from '../middleware/auth.middleware';
 import fs from 'fs/promises';
 
 const router = Router();
@@ -54,7 +55,7 @@ router.get('/test', async (_req: Request, res: Response) => {
  * POST /transcribe
  * Transcribe an audio file
  */
-router.post('/transcribe', upload.single('audio'), async (req: Request, res: Response) => {
+router.post('/transcribe', requireAuth, upload.single('audio'), async (req: Request, res: Response) => {
   let filePath: string | undefined;
 
   try {

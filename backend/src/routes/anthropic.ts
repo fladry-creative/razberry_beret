@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { anthropicService } from '../services/anthropic.service';
 import { logger } from '../config/logger';
+import { requireAuth } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -34,7 +35,7 @@ router.get('/test', async (_req: Request, res: Response) => {
  * POST /generate-question
  * Generate a question for session flow
  */
-router.post('/generate-question', async (req: Request, res: Response) => {
+router.post('/generate-question', requireAuth, async (req: Request, res: Response) => {
   try {
     const { userResponse, sessionContext } = req.body;
     

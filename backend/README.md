@@ -80,14 +80,17 @@ backend/
 │   │   ├── logger.ts    # Winston logger setup
 │   │   └── supabase.ts  # Supabase client
 │   ├── middleware/      # Express middleware
-│   │   └── errorHandler.ts
+│   │   ├── errorHandler.ts
+│   │   └── auth.middleware.ts
 │   ├── routes/          # API routes
 │   │   ├── health.ts    # Health check endpoint
+│   │   ├── auth.ts      # Authentication endpoints
 │   │   ├── anthropic.ts # Anthropic API routes
 │   │   └── transcription.ts # Whisper transcription routes
 │   ├── services/        # Business logic services
 │   │   ├── anthropic.service.ts
-│   │   └── whisper.service.ts
+│   │   ├── whisper.service.ts
+│   │   └── auth.service.ts
 │   ├── scripts/         # Utility scripts
 │   │   └── test-anthropic.ts
 │   ├── app.ts           # Express app setup
@@ -118,8 +121,163 @@ Returns server health status and service connectivity.
     "uptime": 123.456,
     "environment": "development",
     "services": {
-      "supabase": "connected"
+      "supabase": "connected",
+      "auth": "connected"
     }
+  }
+}
+```
+
+### Authentication API
+
+**POST** `/api/v1/auth/register`
+
+Register a new user account.
+
+**Request Body:**
+```json
+{
+  "email": "user@example.com",
+  "password": "securepassword123"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": "uuid",
+      "email": "user@example.com",
+      "created_at": "2025-10-13T12:00:00.000Z"
+    },
+    "session": {
+      "access_token": "jwt_token",
+      "refresh_token": "refresh_token",
+      "expires_at": 1697203200
+    },
+    "message": "Registration successful"
+  }
+}
+```
+
+**POST** `/api/v1/auth/login`
+
+Login with existing credentials.
+
+**Request Body:**
+```json
+{
+  "email": "user@example.com",
+  "password": "securepassword123"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": "uuid",
+      "email": "user@example.com",
+      "created_at": "2025-10-13T12:00:00.000Z"
+    },
+    "session": {
+      "access_token": "jwt_token",
+      "refresh_token": "refresh_token",
+      "expires_at": 1697203200
+    },
+    "message": "Login successful"
+  }
+}
+```
+
+**POST** `/api/v1/auth/logout` 🔒
+
+Logout current user (requires authentication).
+
+**Headers:**
+```
+Authorization: Bearer your_jwt_token
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "message": "Logout successful"
+  }
+}
+```
+
+**POST** `/api/v1/auth/refresh`
+
+Refresh access token using refresh token.
+
+**Request Body:**
+```json
+{
+  "refresh_token": "your_refresh_token"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": "uuid",
+      "email": "user@example.com",
+      "created_at": "2025-10-13T12:00:00.000Z"
+    },
+    "session": {
+      "access_token": "new_jwt_token",
+      "refresh_token": "new_refresh_token",
+      "expires_at": 1697203200
+    },
+    "message": "Token refreshed successfully"
+  }
+}
+```
+
+**GET** `/api/v1/auth/me` 🔒
+
+Get current user information (requires authentication).
+
+**Headers:**
+```
+Authorization: Bearer your_jwt_token
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": "uuid",
+      "email": "user@example.com",
+      "created_at": "2025-10-13T12:00:00.000Z"
+    }
+  }
+}
+```
+
+**GET** `/api/v1/auth/test`
+
+Test authentication service connectivity.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "connected": true,
+    "service": "supabase-auth"
   }
 }
 ```
@@ -144,9 +302,14 @@ Test Anthropic API connectivity.
 }
 ```
 
-**POST** `/api/v1/anthropic/generate-question`
+**POST** `/api/v1/anthropic/generate-question` 🔒
 
-Generate a question for the session flow.
+Generate a question for the session flow (requires authentication).
+
+**Headers:**
+```
+Authorization: Bearer your_jwt_token
+```
 
 **Request Body:**
 ```json
@@ -184,9 +347,14 @@ Test Whisper API configuration.
 }
 ```
 
-**POST** `/api/v1/transcription/transcribe`
+**POST** `/api/v1/transcription/transcribe` 🔒
 
-Transcribe an audio file to text.
+Transcribe an audio file to text (requires authentication).
+
+**Headers:**
+```
+Authorization: Bearer your_jwt_token
+```
 
 **Request:** multipart/form-data
 - `audio` (file, required) - Audio file to transcribe
