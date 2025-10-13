@@ -68,6 +68,12 @@ npm start
 
 ```
 backend/
+├── database/            # Database migrations and seeds
+│   ├── migrations/
+│   │   └── 001_initial_schema.sql
+│   ├── seeds/
+│   │   └── prince_songs.sql
+│   └── README.md
 ├── src/
 │   ├── config/          # Configuration files
 │   │   ├── env.ts       # Environment variables
@@ -86,6 +92,7 @@ backend/
 │   │   └── test-anthropic.ts
 │   ├── app.ts           # Express app setup
 │   └── index.ts         # Server entry point
+├── uploads/             # Temporary file storage (gitignored)
 ├── dist/                # Compiled JavaScript (generated)
 ├── .env.example         # Example environment variables
 ├── package.json
