@@ -9,7 +9,8 @@
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test:anthropic": "tsx src/scripts/test-anthropic.ts"
   },
   "keywords": [
     "api",
@@ -20,6 +21,7 @@
   "author": "Razberry Beret Team",
   "license": "ISC",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.65.0",
     "@supabase/supabase-js": "^2.38.4",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -45,4 +47,3 @@
     "npm": ">=9.0.0"
   }
 }
-
