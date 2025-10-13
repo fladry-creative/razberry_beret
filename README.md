@@ -93,7 +93,8 @@ Quality assurance, beta testing, and App Store submission.
 
 ### Prerequisites
 - Node.js 18+ and npm
-- Xcode 15+ (for iOS development)
+- Xcode 15+ (for iOS development)  
+- iOS 17.0+ (deployment target)
 - Supabase account
 - Anthropic API key (Claude Sonnet 4.5)
 - OpenAI API key (Whisper)
@@ -114,7 +115,8 @@ npm run dev
 
 # iOS setup
 cd ../ios
-# Open RazberryBeret.xcodeproj in Xcode
+# Open RazberryBeret.xcodeproj in Xcode 15+
+# Build and run on iOS 17.0+ simulator or device
 ```
 
 More detailed setup instructions coming soon as development progresses.
