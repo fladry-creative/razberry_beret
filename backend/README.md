@@ -77,9 +77,11 @@ backend/
 │   │   └── errorHandler.ts
 │   ├── routes/          # API routes
 │   │   ├── health.ts    # Health check endpoint
-│   │   └── anthropic.ts # Anthropic API routes
+│   │   ├── anthropic.ts # Anthropic API routes
+│   │   └── transcription.ts # Whisper transcription routes
 │   ├── services/        # Business logic services
-│   │   └── anthropic.service.ts
+│   │   ├── anthropic.service.ts
+│   │   └── whisper.service.ts
 │   ├── scripts/         # Utility scripts
 │   │   └── test-anthropic.ts
 │   ├── app.ts           # Express app setup
@@ -153,6 +155,60 @@ Generate a question for the session flow.
   "success": true,
   "data": {
     "question": "What specific problem are your founders facing that led you to build this?"
+  }
+}
+```
+
+### Transcription API (Whisper)
+
+**GET** `/api/v1/transcription/test`
+
+Test Whisper API configuration.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "connected": true,
+    "supportedFormats": ["flac", "mp3", "mp4", "mpeg", "mpga", "m4a", "ogg", "wav", "webm"],
+    "model": "whisper-1"
+  }
+}
+```
+
+**POST** `/api/v1/transcription/transcribe`
+
+Transcribe an audio file to text.
+
+**Request:** multipart/form-data
+- `audio` (file, required) - Audio file to transcribe
+- `language` (string, optional) - ISO-639-1 language code (e.g., "en")
+- `prompt` (string, optional) - Optional text to guide the model
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "text": "This is the transcribed text from the audio file.",
+    "duration": 15.5,
+    "language": "en"
+  }
+}
+```
+
+**GET** `/api/v1/transcription/formats`
+
+Get list of supported audio formats.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "supportedFormats": ["flac", "mp3", "mp4", "mpeg", "mpga", "m4a", "ogg", "wav", "webm"],
+    "maxFileSize": "25MB"
   }
 }
 ```
